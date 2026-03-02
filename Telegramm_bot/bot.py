@@ -59,7 +59,7 @@ def help_command(message):
 
 
 @bot.message_handler(func=lambda message: message.text == "Пока")
-def goodbuy_message(message):
+def goodbye_message(message):
     bot.send_message(message.chat.id, "и тебе досвидания мой дорогой друг!")
 
 
@@ -91,6 +91,36 @@ def callback_inline(call):
     elif call.data == "no":
         bot.send_message(call.message.chat.id, "Ничего, скоро втянешься!")
     bot.answer_callback_query(call.id)
+
+
+@bot.message_handler(content_types=["photo"])
+def handle_photo(message):
+    # Проверяем есть ли папка downloads
+    os.makedirs("downloads", exist_ok=True)
+    # 1. Берем самое качественное фото (последнее в списке)
+    photo_file = message.photo[-1]
+
+    # 2. Получаем информацию о файле через API Телеграма
+    file_info = bot.get_file(photo_file.file_id)
+
+    # 3. Скачиваем файл
+    if file_info.file_path:
+        # Здесь Pylance уже не будет ругаться,
+        # так как мы гарантировали наличие строки
+        downloaded_file = bot.download_file(file_info.file_path)
+    else:
+        bot.reply_to(
+            message, "Извини, не удалось получить путь к файлу. Попробуй еще раз! ❌"
+        )
+
+    # 4. Создаем имя файла (используем ID, чтобы фото не заменяли друг друга)
+    save_path = f"downloads/{photo_file.file_id}.jpg"
+
+    # 5. Сохраняем физически на диск
+    with open(save_path, "wb") as new_file:
+        new_file.write(downloaded_file)
+
+    bot.reply_to(message, f"Готов! Фото сохранено как {save_path}")
 
 
 # Запуск бота

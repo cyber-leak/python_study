@@ -1,5 +1,5 @@
-.env
+.DS_Store
+downloads/
 .venv/
-venv/
 __pycache__/
-*.pyc
+.env
