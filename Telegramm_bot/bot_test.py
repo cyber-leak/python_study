@@ -13,9 +13,26 @@ if BOT_TOKEN is None:
 bot = telebot.TeleBot(BOT_TOKEN)
 
 
-@bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['start', 'main', 'hello'])
 def handler_start(message):
     bot.send_message(message.chat.id, "Здорова Братан, как дела? Как сам....")
 
-print("start bot")
+
+
+
+
+
+
+
+@bot.message_handler(commands=['help'])
+def handler_help(message):
+    bot.send_message(message.chat.id, "Привет, с чем тебе мопочь ?")
+    
+    
+    
+    
+
+    
 bot.polling(none_stop=True)
+
+
