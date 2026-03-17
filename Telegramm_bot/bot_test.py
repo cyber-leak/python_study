@@ -15,9 +15,16 @@ bot = telebot.TeleBot(BOT_TOKEN)
 def handler_start(message):
     bot.send_message(
         message.chat.id,
-        "<b>Здорова Братан</b>, <em><u>как дела? Как сам....</u></em>",
-        parse_mode="html",
+        f"Hello, {message.from_user.first_name},{message.from_user.last_name}",
     )
+
+    # raw_data = str(message)
+    # bot.send_message(
+    #     message.chat.id,
+    #     "<b>Здорова Братан</b>, <em><u>как дела? Как сам....</u></em>",
+    #     parse_mode="html",
+    # )
+    # bot.send_message(message.chat.id, raw_data[:2000])
 
 
 @bot.message_handler(commands=["help"])
