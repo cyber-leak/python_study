@@ -1,5 +1,6 @@
 import os
 import webbrowser
+
 import telebot
 from dotenv import load_dotenv
 from telebot import types
@@ -13,11 +14,21 @@ bot = telebot.TeleBot(BOT_TOKEN)
 
 
 
+
+
+
+
+
+
+@bot.message_handler(content_types=["photo"])
+def get_photo(message):
+    # bot.send_message(message.chat.id, "Какое красивое фото!")
+    bot.reply_to(message, "Какое красивое фото!")
+
+
 @bot.message_handler(commands=["site", "website"])
 def site(message):
-    webbrowser.open("https://google.com")
-    
-
+    webbrowser.open("https://youtube.com")
 
 
 @bot.message_handler(commands=["start", "main", "hello"])
