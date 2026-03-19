@@ -1,7 +1,8 @@
 import os
-
+import webbrowser
 import telebot
 from dotenv import load_dotenv
+from telebot import types
 
 load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -11,8 +12,16 @@ if BOT_TOKEN is None:
 bot = telebot.TeleBot(BOT_TOKEN)
 
 
+
+@bot.message_handler(commands=["site", "website"])
+def site(message):
+    webbrowser.open("https://google.com")
+    
+
+
+
 @bot.message_handler(commands=["start", "main", "hello"])
-def handler_start(message):
+def handler_start(message) -> None:
     bot.send_message(
         message.chat.id,
         f"Hello, {message.from_user.first_name},{message.from_user.last_name}",
@@ -30,6 +39,17 @@ def handler_start(message):
 @bot.message_handler(commands=["help"])
 def handler_help(message):
     bot.send_message(message.chat.id, "Привет, с чем тебе мопочь ?")
+
+
+@bot.message_handler()
+def info(message) -> None:
+    if message.text.lower() == "hello":
+        bot.send_message(
+            message.chat.id,
+            f"Hello, {message.from_user.first_name},{message.from_user.last_name}",
+        )
+    elif message.text.lower() == "id":
+        bot.reply_to(message, f"ID: {message.from_user.id}")
 
 
 bot.polling(none_stop=True)
