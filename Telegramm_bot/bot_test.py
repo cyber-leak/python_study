@@ -1,6 +1,5 @@
 import os
 import webbrowser
-from operator import call
 
 import telebot
 from dotenv import load_dotenv
@@ -14,30 +13,64 @@ if BOT_TOKEN is None:
 bot = telebot.TeleBot(BOT_TOKEN)
 
 
-@bot.message_handler(content_types=["photo"])
-def get_photo(message):
-    markup = types.InlineKeyboardMarkup()
-    # site_button1 = types.InlineKeyboardButton(
-    #     text="Перейти на сайт YOUTUBE...", url="https://youtube.com"
-    # )
-    # site_button2 = types.InlineKeyboardButton(
-    #     text="Перейсти на сайт GOOGLE...", url="https://google.com"
-    # )
-    # site_button3 = types.InlineKeyboardButton(
-    #     text="Удалить фото", callback_data="delete"
-    # )
-    # site_button4 = types.InlineKeyboardButton(
-    #     text="Изменить фото", callback_data="edit"
-    # )
-    # markup.add(site_button1, site_button2, site_button3, site_button4)
+@bot.message_handler(commands=["start"])
+def start(message):
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
 
-    markup.add(types.InlineKeyboardButton(text="ютуб", url="https://youtube.com"))
-    markup.add(types.InlineKeyboardButton(text="гугл", url="https://google.com"))
-    markup.add(types.InlineKeyboardButton(text="удалить", callback_data="delete"))
-    markup.add(types.InlineKeyboardButton(text="редактирвоать", callback_data="edit"))
+    site_button1 = types.KeyboardButton(text="Перейти на сайт YOUTUBE...")
+    site_button2 = types.KeyboardButton(text="Перейсти на сайт GOOGLE...")
+    site_button3 = types.KeyboardButton(text="Удалить фото")
+    site_button4 = types.KeyboardButton(text="Изменить фото")
 
-    bot.reply_to(message, "Какое красивое фото!", reply_markup=markup)
+    markup.add(site_button1, site_button2, site_button3, site_button4)
 
+    bot.send_message(message.chat.id, "HI", reply_markup=markup)
+
+
+# @bot.message_handler(content_types=["photo"])
+# def get_photo(message):
+#     markup = types.InlineKeyboardMarkup(row_width=2)
+#     site_button1 = types.InlineKeyboardButton(
+#         text="Перейти на сайт YOUTUBE...", url="https://youtube.com"
+#     )
+#     site_button2 = types.InlineKeyboardButton(
+#         text="Перейсти на сайт GOOGLE...", url="https://google.com"
+#     )
+#     site_button3 = types.InlineKeyboardButton(
+#         text="Удалить фото", callback_data="delete"
+#     )
+#     site_button4 = types.InlineKeyboardButton(
+#         text="Изменить фото", callback_data="edit"
+#     )
+#     # markup.row(site_button1)
+#     # markup.row(site_button2, site_button3)
+#     markup.add(site_button1, site_button2, site_button3, site_button4)
+
+#     # markup.add(types.InlineKeyboardButton(text="ютуб", url="https://youtube.com"))
+#     # markup.add(types.InlineKeyboardButton(text="гугл", url="https://google.com"))
+#     # markup.add(types.InlineKeyboardButton(text="удалить", callback_data="delete"))
+#     # markup.add(types.InlineKeyboardButton(text="редактирвоать", callback_data="edit"))
+
+#     bot.reply_to(message, "Какое красивое фото!", reply_markup=markup)
+
+
+# @bot.callback_query_handler(func=lambda callback: True)
+# def callback_message(callback):
+#     if callback.data == "delete":
+#         try:
+#             ids_to_delete = [
+#                 callback.message.message_id,
+#                 callback.message.reply_to_message.message_id,
+#             ]
+#             bot.delete_messages(callback.message.chat.id, ids_to_delete)
+#         except Exception as e:
+#             print(e)
+#             bot.delete_message(callback.message.chat.id, callback.message.message_id)
+
+#     elif callback.data == "edit":
+#         bot.edit_message_text(
+#             "Edit text", callback.message.chat.id, callback.message.message_id
+#         )
 
 
 @bot.message_handler(commands=["site", "website"])
