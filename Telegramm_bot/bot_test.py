@@ -23,6 +23,14 @@ def start(message):
     site_button4 = types.KeyboardButton(text="Изменить фото")
 
     markup.add(site_button1, site_button2, site_button3, site_button4)
+    with open("photo.jpeg", "rb") as file:
+        # file = open("./photo.jpeg", "rb")
+        bot.send_document(message.chat.id, file, reply_markup=markup)
+        # bot.send_photo(message.chat.id, file, reply_markup=markup)
+        # bot.send_audio(message.chat.id, file, reply_markup=markup)
+        # bot.send_video(message.chat.id, file, reply_markup=markup)
+        
+        
 
     bot.send_message(message.chat.id, "HI", reply_markup=markup)
 
