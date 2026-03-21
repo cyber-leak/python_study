@@ -26,6 +26,25 @@ def start(message):
 
     bot.send_message(message.chat.id, "HI", reply_markup=markup)
 
+    bot.register_next_step_handler(message, on_click)
+
+
+def on_click(message):
+    if message.text == "Перейти на сайт YOUTUBE...":
+        bot.send_message(message.chat.id, "Website is open YOUTUBE.")
+
+    elif message.text == "Перейсти на сайт GOOGLE...":
+        bot.send_message(message.chat.id, "Website is open GOOGLE.")
+
+    elif message.text == "Удалить фото":
+        bot.send_message(message.chat.id, "Delete photo")
+
+    elif message.text == "Изменить фото":
+        bot.send_message(message.chat.id, "Edit photo")
+
+    else:
+        bot.send_message(message.chat.id, "что то пошло не так....")
+
 
 # @bot.message_handler(content_types=["photo"])
 # def get_photo(message):
