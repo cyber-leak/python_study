@@ -1,4 +1,5 @@
 import os
+import sqlite3
 import webbrowser
 
 import telebot
@@ -15,43 +16,64 @@ bot = telebot.TeleBot(BOT_TOKEN)
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    conn = sqlite3.connect("test.sql")
+    cur = conn.cursor()
 
-    site_button1 = types.KeyboardButton(text="Перейти на сайт YOUTUBE...")
-    site_button2 = types.KeyboardButton(text="Перейсти на сайт GOOGLE...")
-    site_button3 = types.KeyboardButton(text="Удалить фото")
-    site_button4 = types.KeyboardButton(text="Изменить фото")
+    cur.execute(
+        "CREATE TABLE IF NOT EXISTS users (id int auto_increment primary key, name varchar(50), pass varchar(50))"
+    )
 
-    markup.add(site_button1, site_button2, site_button3, site_button4)
-    with open("photo.jpeg", "rb") as file:
-        # file = open("./photo.jpeg", "rb")
-        bot.send_document(message.chat.id, file, reply_markup=markup)
-        # bot.send_photo(message.chat.id, file, reply_markup=markup)
-        # bot.send_audio(message.chat.id, file, reply_markup=markup)
-        # bot.send_video(message.chat.id, file, reply_markup=markup)
-        
-        
+    conn.commit()
+    cur.close()
+    conn.close()
 
-    bot.send_message(message.chat.id, "HI", reply_markup=markup)
+    bot.send_message(message.chat.id, "Привет тебя сейчас зарегистрируют!, Введи имя")
 
-    bot.register_next_step_handler(message, on_click)
+    bot.register_next_step_handler(message, user_name)
 
 
-def on_click(message):
-    if message.text == "Перейти на сайт YOUTUBE...":
-        bot.send_message(message.chat.id, "Website is open YOUTUBE.")
+def user_name(message):
+    pass
 
-    elif message.text == "Перейсти на сайт GOOGLE...":
-        bot.send_message(message.chat.id, "Website is open GOOGLE.")
 
-    elif message.text == "Удалить фото":
-        bot.send_message(message.chat.id, "Delete photo")
+# @bot.message_handler(commands=["start"])
+# def start(message):
+#     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
 
-    elif message.text == "Изменить фото":
-        bot.send_message(message.chat.id, "Edit photo")
+#     site_button1 = types.KeyboardButton(text="Перейти на сайт YOUTUBE...")
+#     site_button2 = types.KeyboardButton(text="Перейсти на сайт GOOGLE...")
+#     site_button3 = types.KeyboardButton(text="Удалить фото")
+#     site_button4 = types.KeyboardButton(text="Изменить фото")
 
-    else:
-        bot.send_message(message.chat.id, "что то пошло не так....")
+#     markup.add(site_button1, site_button2, site_button3, site_button4)
+#     with open("photo.jpeg", "rb") as file:
+#         # file = open("./photo.jpeg", "rb")
+#         bot.send_document(message.chat.id, file, reply_markup=markup)
+#         # bot.send_photo(message.chat.id, file, reply_markup=markup)
+#         # bot.send_audio(message.chat.id, file, reply_markup=markup)
+#         # bot.send_video(message.chat.id, file, reply_markup=markup)
+
+
+# #     bot.send_message(message.chat.id, "HI", reply_markup=markup)
+
+#     bot.register_next_step_handler(message, on_click)
+
+
+# def on_click(message):
+#     if message.text == "Перейти на сайт YOUTUBE...":
+#         bot.send_message(message.chat.id, "Website is open YOUTUBE.")
+
+#     elif message.text == "Перейсти на сайт GOOGLE...":
+#         bot.send_message(message.chat.id, "Website is open GOOGLE.")
+
+#     elif message.text == "Удалить фото":
+#         bot.send_message(message.chat.id, "Delete photo")
+
+#     elif message.text == "Изменить фото":
+#         bot.send_message(message.chat.id, "Edit photo")
+
+#     else:
+#         bot.send_message(message.chat.id, "что то пошло не так....")
 
 
 # @bot.message_handler(content_types=["photo"])
@@ -100,41 +122,41 @@ def on_click(message):
 #         )
 
 
-@bot.message_handler(commands=["site", "website"])
-def site(message):
-    webbrowser.open("https://youtube.com")
+# @bot.message_handler(commands=["site", "website"])
+# def site(message):
+#     webbrowser.open("https://youtube.com")
 
 
-@bot.message_handler(commands=["start", "main", "hello"])
-def handler_start(message) -> None:
-    bot.send_message(
-        message.chat.id,
-        f"Hello, {message.from_user.first_name},{message.from_user.last_name}",
-    )
+# @bot.message_handler(commands=["start", "main", "hello"])
+# def handler_start(message) -> None:
+#     bot.send_message(
+#         message.chat.id,
+#         f"Hello, {message.from_user.first_name},{message.from_user.last_name}",
+#     )
 
-    # raw_data = str(message)
-    # bot.send_message(
-    #     message.chat.id,
-    #     "<b>Здорова Братан</b>, <em><u>как дела? Как сам....</u></em>",
-    #     parse_mode="html",
-    # )
-    # bot.send_message(message.chat.id, raw_data[:2000])
-
-
-@bot.message_handler(commands=["help"])
-def handler_help(message):
-    bot.send_message(message.chat.id, "Привет, с чем тебе мопочь ?")
+#     # raw_data = str(message)
+#     # bot.send_message(
+#     #     message.chat.id,
+#     #     "<b>Здорова Братан</b>, <em><u>как дела? Как сам....</u></em>",
+#     #     parse_mode="html",
+#     # )
+#     # bot.send_message(message.chat.id, raw_data[:2000])
 
 
-@bot.message_handler()
-def info(message) -> None:
-    if message.text.lower() == "hello":
-        bot.send_message(
-            message.chat.id,
-            f"Hello, {message.from_user.first_name},{message.from_user.last_name}",
-        )
-    elif message.text.lower() == "id":
-        bot.reply_to(message, f"ID: {message.from_user.id}")
+# @bot.message_handler(commands=["help"])
+# def handler_help(message):
+#     bot.send_message(message.chat.id, "Привет, с чем тебе мопочь ?")
+
+
+# @bot.message_handler()
+# def info(message) -> None:
+#     if message.text.lower() == "hello":
+#         bot.send_message(
+#             message.chat.id,
+#             f"Hello, {message.from_user.first_name},{message.from_user.last_name}",
+#         )
+#     elif message.text.lower() == "id":
+#         bot.reply_to(message, f"ID: {message.from_user.id}")
 
 
 bot.polling(none_stop=True)
